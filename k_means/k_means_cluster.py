@@ -42,12 +42,13 @@ def Draw(pred, features, poi, mark_poi=False, name="image.png", f1_name="feature
 data_dict = pickle.load( open("../final_project/final_project_dataset.pkl", "r") )
 ### there's an outlier--remove it! 
 data_dict.pop("TOTAL", 0)
-
+#print max(data_dict.keys("exercised_stock_options"), key=(lambda k: data_dict[k]))
 
 ### the input features we want to use 
 ### can be any key in the person-level dictionary (salary, director_fees, etc.) 
 feature_1 = "salary"
 feature_2 = "exercised_stock_options"
+#feature_3 = "total_payments"
 poi  = "poi"
 features_list = [poi, feature_1, feature_2]
 data = featureFormat(data_dict, features_list )
@@ -59,13 +60,43 @@ poi, finance_features = targetFeatureSplit( data )
 ### for f1, f2, _ in finance_features:
 ### (as it's currently written, the line below assumes 2 features)
 for f1, f2 in finance_features:
-    plt.scatter( f1, f2 )
+    plt.scatter( f1, f2)
 plt.show()
 
 ### cluster here; create predictions of the cluster labels
 ### for the data and store them to a list called pred
 
+from sklearn.cluster import KMeans
+kmeans = KMeans(n_clusters=2)
+kmeans.fit(finance_features)
+pred = kmeans.predict(finance_features)
+#pred = kmeans.predict()
 
+import numpy as np
+f = np.array(finance_features)
+fcol1 = f[:, [0]]  #salary 
+fcol2 = f[:, [1]] #stocks
+maxsalary = np.max(fcol1)
+print "max stocks: ", maxsalary
+minsalary = np.min(fcol1[fcol1>0])
+print "min: ", minsalary
+print "range: ", maxsalary - minsalary
+salprime = float(200000 - minsalary) / (maxsalary - minsalary)
+print "featureScaledSalary: ", salprime
+ 
+maxstocks = np.max(fcol2)
+minstocks = np.min(fcol2[fcol2>0])
+print "max: ", maxstocks, "  min: ", minstocks
+stocksprime = float(1000000 - minstocks) / (maxstocks - minstocks)
+print "featureScaledStocks: ", stocksprime
+
+""""
+from sklearn.preprocessor import MinMaxSalary
+scaler = MinMaxSalary()
+fcoln = f[:[n]]
+emails = np.array(fcoln)
+rescaled_emails = scaler.fit_transform(emails)
+"""
 
 
 ### rename the "name" parameter when you change the number of features

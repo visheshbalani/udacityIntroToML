@@ -28,10 +28,23 @@ def parseOutText(f):
         text_string = content[1].translate(string.maketrans("", ""), string.punctuation)
 
         ### project part 2: comment out the line below
-        words = text_string
+        #words = text_string
+	from nltk import word_tokenize
+	#from nltk.tokenize.TreebankWordDetokenizer import detokenize
+	
 
+
+	from nltk.stem.snowball import SnowballStemmer
+	stemmer = SnowballStemmer("english")
+	words = stemmer.stem(text_string)
+	tokens = word_tokenize(words)
+        print tokens
+	#from nltk import untokenize
+	#import untokenize
+	#utokens = detokenize(tokens)
+	#print utokens
         ### split the text string into individual words, stem each word,
-        ### and append the stemmed word to words (make sure there's a single
+        ### and append the stemmed :wqword to words (make sure there's a single
         ### space between each stemmed word)
         
 

@@ -1,6 +1,8 @@
 #!/usr/bin/python
 
-import matplotlib.pyplot as plt
+import matplotlib
+matplotlib.use('Agg')
+from matplotlib import pyplot as plt
 from prep_terrain_data import makeTerrainData
 from class_vis import prettyPicture
 
@@ -30,12 +32,15 @@ plt.show()
 
 ### your code here!  name your classifier object clf if you want the 
 ### visualization code (prettyPicture) to show you the decision boundary
+from sklearn.neighbors import KNeighborsClassifier
+clf = KNeighborsClassifier()  #n_neighbors=3, algorithm='brute'
+clf.fit(features_train, labels_train)
+predictions = clf.predict(features_test)
+#clf.score(features_test, labels_test)
 
-
-
-
-
-
+from sklearn.metrics import accuracy_score
+acc = accuracy_score(labels_test, predictions) 
+print acc
 
 
 try:
